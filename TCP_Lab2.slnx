@@ -3,7 +3,7 @@
     <Platform Name="x64" />
     <Platform Name="x86" />
   </Configurations>
-  <Project Path="AsyncServer/AsyncServer.vcxproj" />
-  <Project Path="TCPClient/TCPClient.vcxproj" />
-  <Project Path="TCPServer/TCPServer.vcxproj" />
+  <Project Path="AsyncServer/AsyncServer.vcxproj" Id="832ce6b8-2b23-4908-be7a-ac0d55e30adf" />
+  <Project Path="TCPClient/TCPClient.vcxproj" Id="88edf9c3-313f-47a9-bb39-c70b598a7ca4" />
+  <Project Path="TCPServer/TCPServer.vcxproj" Id="a6279684-9451-448f-9c97-9a59d70a2c3c" />
 </Solution>

@@ -21,7 +21,7 @@
   <PropertyGroup Label="Globals">
     <VCProjectVersion>18.0</VCProjectVersion>
     <Keyword>Win32Proj</Keyword>
-    <ProjectGuid>{3201b33b-96ad-43dd-90f5-3d8bc180839e}</ProjectGuid>
+    <ProjectGuid>{832ce6b8-2b23-4908-be7a-ac0d55e30adf}</ProjectGuid>
     <RootNamespace>AsyncServer</RootNamespace>
     <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
   </PropertyGroup>

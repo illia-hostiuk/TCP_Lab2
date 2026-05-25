@@ -21,7 +21,9 @@ SOCKET clientSocket;
 
 bool serverStarted = false;
 
+// =========================================
 // ADD LOG TO GUI
+// =========================================
 
 void AddLog(const char* text) {
 
@@ -49,7 +51,9 @@ void AddLog(const char* text) {
     );
 }
 
+// =========================================
 // START SERVER
+// =========================================
 
 void StartServer(HWND hwnd) {
 
@@ -116,7 +120,9 @@ void StartServer(HWND hwnd) {
     serverStarted = true;
 }
 
+// =========================================
 // SEND TEST FILE
+// =========================================
 
 void SendTestFile() {
 
@@ -180,7 +186,9 @@ void SendTestFile() {
     closesocket(sendSocket);
 }
 
+// =========================================
 // WINDOW PROCEDURE
+// =========================================
 
 LRESULT CALLBACK WindowProc(
     HWND hwnd,
@@ -242,7 +250,9 @@ LRESULT CALLBACK WindowProc(
 
         break;
 
+        // =====================================
         // BUTTONS
+        // =====================================
 
     case WM_COMMAND:
 
@@ -263,7 +273,9 @@ LRESULT CALLBACK WindowProc(
 
         break;
 
+        // =====================================
         // SOCKET EVENTS
+        // =====================================
 
     case WM_SOCKET:
 
@@ -362,7 +374,9 @@ LRESULT CALLBACK WindowProc(
     );
 }
 
+// =========================================
 // WINMAIN
+// =========================================
 
 int WINAPI WinMain(
     HINSTANCE hInstance,
