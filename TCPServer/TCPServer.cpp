@@ -2,111 +2,173 @@
 
 #include <iostream>
 #include <winsock2.h>
+#include <fstream>
+#include <windows.h>
 
 #pragma comment(lib, "ws2_32.lib")
 
 using namespace std;
 
+// RECEIVE FILE
+
+void receiveFile(
+    SOCKET clientSocket,
+    const char* outputFile
+) {
+
+    ofstream outFile(outputFile, ios::binary);
+
+    char buffer[1024];
+
+    int bytesReceived;
+
+    while ((bytesReceived = recv(
+        clientSocket,
+        buffer,
+        sizeof(buffer),
+        0)) > 0) {
+
+        outFile.write(buffer, bytesReceived);
+
+        cout << "Received block size: "
+            << bytesReceived
+            << endl;
+    }
+
+    outFile.close();
+
+    cout << "\nFile saved as: "
+        << outputFile
+        << endl;
+
+    // Open file in Notepad
+    ShellExecuteA(
+        NULL,
+        "open",
+        "notepad.exe",
+        outputFile,
+        NULL,
+        SW_SHOWNORMAL
+    );
+}
+
 int main() {
 
     WSADATA wsaData;
 
-    // WinSock initialization
     if (WSAStartup(MAKEWORD(2, 2), &wsaData) != 0) {
+
         cout << "WSAStartup failed\n";
+
         return 1;
     }
 
     cout << "WinSock initialized\n";
 
-    // Create TCP socket
     SOCKET serverSocket = socket(AF_INET, SOCK_STREAM, IPPROTO_TCP);
 
     if (serverSocket == INVALID_SOCKET) {
+
         cout << "Socket creation failed\n";
+
         WSACleanup();
+
         return 1;
     }
 
     cout << "Server socket created\n";
 
-    // Server address
     sockaddr_in serverAddr;
 
     serverAddr.sin_family = AF_INET;
     serverAddr.sin_port = htons(644);
     serverAddr.sin_addr.s_addr = INADDR_ANY;
 
-    // Bind
-    if (bind(serverSocket,
+    if (bind(
+        serverSocket,
         (sockaddr*)&serverAddr,
-        sizeof(serverAddr)) == SOCKET_ERROR) {
+        sizeof(serverAddr)
+    ) == SOCKET_ERROR) {
 
         cout << "Bind failed. Error: "
             << WSAGetLastError() << endl;
 
         closesocket(serverSocket);
+
         WSACleanup();
+
         return 1;
     }
 
     cout << "Bind successful\n";
 
-    // Listen
     if (listen(serverSocket, SOMAXCONN) == SOCKET_ERROR) {
 
-        cout << "Listen failed. Error: "
-            << WSAGetLastError() << endl;
+        cout << "Listen failed\n";
 
         closesocket(serverSocket);
+
         WSACleanup();
+
         return 1;
     }
 
     cout << "Server listening on port 644...\n";
 
-    // Accept client
-    sockaddr_in clientAddr;
-    int clientSize = sizeof(clientAddr);
 
-    SOCKET clientSocket = accept(
+    // WHOLE FILE
+
+
+    cout << "\n====================================\n";
+    cout << "Waiting for whole file...\n";
+
+    sockaddr_in clientAddr1;
+
+    int clientSize1 = sizeof(clientAddr1);
+
+    SOCKET clientSocket1 = accept(
         serverSocket,
-        (sockaddr*)&clientAddr,
-        &clientSize
+        (sockaddr*)&clientAddr1,
+        &clientSize1
     );
 
-    if (clientSocket == INVALID_SOCKET) {
+    cout << "Client connected for whole file\n";
 
-        cout << "Accept failed. Error: "
-            << WSAGetLastError() << endl;
-
-        closesocket(serverSocket);
-        WSACleanup();
-        return 1;
-    }
-
-    cout << "Client connected!\n";
-
-    // Receive data
-    char buffer[1024];
-
-    int bytesReceived = recv(
-        clientSocket,
-        buffer,
-        sizeof(buffer),
-        0
+    receiveFile(
+        clientSocket1,
+        "received_whole.tex"
     );
 
-    if (bytesReceived > 0) {
+    closesocket(clientSocket1);
 
-        buffer[bytesReceived] = '\0';
 
-        cout << "\nReceived data:\n";
-        cout << buffer << endl;
-    }
+    // 44 FRAGMENTS
 
-    // Close sockets
-    closesocket(clientSocket);
+
+    cout << "\n====================================\n";
+    cout << "Waiting for fragmented file...\n";
+
+    sockaddr_in clientAddr2;
+
+    int clientSize2 = sizeof(clientAddr2);
+
+    SOCKET clientSocket2 = accept(
+        serverSocket,
+        (sockaddr*)&clientAddr2,
+        &clientSize2
+    );
+
+    cout << "Client connected for fragmented file\n";
+
+    receiveFile(
+        clientSocket2,
+        "received_fragments.tex"
+    );
+
+    closesocket(clientSocket2);
+
+
+
     closesocket(serverSocket);
 
     WSACleanup();
